@@ -67,6 +67,6 @@ func (ac *AuthController) Login(c *gin.Context) {
 // 用户信息
 func (ac *AuthController) GetProfile(c *gin.Context) {
 	// TODO
-
+	// 这里需要实现从JWT token中解析用户信息的逻辑，暂时返回一个空的用户对象
 	utils.Success(c, models.User{})
 }
