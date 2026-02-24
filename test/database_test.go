@@ -1,8 +1,8 @@
 package test
 
 import (
-	"golang_learning_blog/config"
-	"golang_learning_blog/models"
+	"blog/config"
+	"blog/models"
 	"log"
 	"testing"
 
@@ -11,7 +11,8 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-// 初始化数据库、迁移数据库表
+// go test ./test/ -run TestInitDB -v
+// 初始化数据库、创建数据库表
 func TestInitDB(t *testing.T) {
 	var err error
 	DBFile := config.GetDBFile()
@@ -35,6 +36,7 @@ func TestInitDB(t *testing.T) {
 	log.Println("自动迁移数据库成功")
 }
 
+// go test ./test/ -run TestCreateData -v
 // 向数据库插入数据
 func TestCreateData(t *testing.T) {
 	config.OpenDB()

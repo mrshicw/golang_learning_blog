@@ -1,14 +1,32 @@
 package routes
 
 import (
-	"golang_learning_blog/controllers"
-	"golang_learning_blog/utils"
+	// "golang_learning_blog/controllers"
+	// "golang_learning_blog/utils"
+
+	"blog/controllers"
+	"blog/middleware"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
+// health
+// 临时的健康检查处理函数，实际项目中应该替换为真正的处理函数
+func Health(c *gin.Context) {
+	c.JSON(200,
+		gin.H{
+			"status":  "OK",
+			"message": time.Now().Format(time.RFC3339),
+		})
+}
+
 func SetupRoutes() *gin.Engine {
-	r := gin.New()
+	r := gin.Default()
+	// 1. 全局中间件
+	r.Use(middleware.LoggerMiddleware())
+	r.Use(middleware.ErrorHandlingMiddleware())
+	r.Use(gin.Recovery())
 
 	// 创建控制器实例
 	authController := &controllers.AuthController{}
@@ -30,13 +48,13 @@ func SetupRoutes() *gin.Engine {
 		// 2、认证路由：用户信息、文章、评论
 		authed := api.Group("")
 		// +认证
-
+		authed.Use(middleware.AuthMiddleWare())
 		{
 			// 用户信息
 			// /api/v1/profile
-			authed.GET("/profile", authController.GetProfile)
+			authed.POST("/profile", authController.GetProfile)
 
-			// 文章
+			//  文章
 			posts := authed.Group("/posts")
 			{
 				// /api/v1/posts
@@ -49,9 +67,11 @@ func SetupRoutes() *gin.Engine {
 			}
 
 			// 评论
-			comments := authed.Group("/posts/:post_id/comments")
+
+			comments := authed.Group("")
 			{
-				comments.POST("", commentController.CreateComment)
+				// /api/v1/posts/:post_id/comments
+				comments.POST("/posts/:post_id/comments", commentController.CreateComment)
 			}
 		}
 
@@ -65,7 +85,6 @@ func SetupRoutes() *gin.Engine {
 		}
 
 		// 4、不需要认证路由：公开评论
-		// /api/v1/comments
 		comments := api.Group("/comments")
 		{
 			// /api/v1/comments/post/:post_id
@@ -74,7 +93,8 @@ func SetupRoutes() *gin.Engine {
 	}
 
 	// 健康检查
-	r.GET("/health", utils.Health)
+	r.GET("/health", Health)
+	r.POST("/health", Health)
 
 	return r
 }
