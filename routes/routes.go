@@ -39,54 +39,62 @@ func SetupRoutes() *gin.Engine {
 		// 1、不需要认证路由：注册、登录认证
 		auth := api.Group("/auth")
 		{
+			// 注册
 			// /api/v1/auth/register
 			auth.POST("/register", authController.Register)
+			// 登录
 			// /api/v1/auth/login
 			auth.POST("/login", authController.Login)
 		}
 
 		// 2、认证路由：用户信息、文章、评论
-		authed := api.Group("")
+		authed := api.Group("/authed")
 		// +认证
 		authed.Use(middleware.AuthMiddleWare())
 		{
-			// 用户信息
-			// /api/v1/profile
+			// 获取用户信息
+			// /api/v1/authed/profile
 			authed.POST("/profile", authController.GetProfile)
 
 			//  文章
 			posts := authed.Group("/posts")
 			{
-				// /api/v1/posts
+				// 发表文章
+				// /api/v1/authed/posts
 				posts.POST("", postController.CreatePost)
-				// /api/v1/posts/:id
+				// 修改文章
+				// /api/v1/authed/posts/:id
 				posts.PUT("/:id", postController.UpdatePost)
-				// /api/v1/posts/:id
+				// 删除文章
+				// /api/v1/authed/posts/:id
 				posts.DELETE("/:id", postController.DeletePost)
 
 			}
 
 			// 评论
-
 			comments := authed.Group("")
 			{
-				// /api/v1/posts/:post_id/comments
+				// 对文章ID发表评论
+				// /api/v1/authed/posts/:post_id/comments
 				comments.POST("/posts/:post_id/comments", commentController.CreateComment)
 			}
 		}
 
 		// 3、不需要认证路由：文章
-		public := api.Group("")
+		public := api.Group("/public")
 		{
-			// /api/v1/posts
+			// 查看所有评论列表
+			// /api/v1/public/posts
 			public.GET("/posts", postController.GetPosts)
-			// /api/v1/posts/:id
+			// 查看文章ID评论
+			// /api/v1/public/posts/:id
 			public.GET("/posts/:id", postController.GetPost)
 		}
 
 		// 4、不需要认证路由：公开评论
 		comments := api.Group("/comments")
 		{
+			// 查看评论
 			// /api/v1/comments/post/:post_id
 			comments.GET("/post/:post_id", commentController.GetComments)
 		}

@@ -43,34 +43,34 @@ js = my_request("/api/v1/auth/login", POST, js=login)
 TOKEN = js["data"]["token"]
 HEADERS ={"Authorization": "Bearer "+TOKEN}
 
-my_request("/api/v1/profile", POST, hds=HEADERS)
+my_request("/api/v1/authed/profile", POST, hds=HEADERS)
 
 posts = {
 		"Title":   "Title 1",
 		"Content": "Content 1",
 }
-#my_request("/api/v1/posts", POST, js=posts, hds=HEADERS)
+#my_request("/api/v1/authed/posts", POST, js=posts, hds=HEADERS)
 
 posts = {
 		"Title":   "Title 2",
 		"Content": "Content 2",
 }
-#my_request("/api/v1/posts", POST, js=posts, hds=HEADERS)
+#my_request("/api/v1/authed/posts", POST, js=posts, hds=HEADERS)
 
 posts = {
 		"Title":   "My Update Post",
 		"Content": "This is the content of my update post.",
 }
-#my_request("/api/v1/posts/1", PUT, js=posts, hds=HEADERS)
+my_request("/api/v1/authed/posts/1", PUT, js=posts, hds=HEADERS)
 
-# my_request("/api/v1/posts/2", DELETE, hds=HEADERS)
+# my_request("/api/v1/authed/posts/2", DELETE, hds=HEADERS)
 
-#my_request("/api/v1/posts/1", GET, hds=HEADERS)
+#my_request("/api/v1/public/posts/1", GET)
 
-#my_request("/api/v1/posts", GET, hds=HEADERS)
+#my_request("/api/v1/public/posts", GET)
 
 comments = {
 		"Content": "This is a comment",
 }
 #my_request("/api/v1/posts/1/comments", POST, js=comments, hds=HEADERS)
-my_request("/api/v1/comments/post/1", GET, hds=HEADERS)
+#my_request("/api/v1/comments/post/1", GET)
