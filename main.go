@@ -15,6 +15,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error loading config: %v", err)
 	}
+	host := cfg.Server.Host
 	port := cfg.Server.Port
 	// 设置 Gin 模式
 	gin.SetMode(cfg.Server.Mode)
@@ -31,7 +32,7 @@ func main() {
 	r := routes.SetupRoutes()
 
 	// 启动服务器
-	r.Run(":" + port)
+	r.Run(host + ":" + port)
 
 	// 起初测试创建Gin引擎
 	// r := gin.Default()

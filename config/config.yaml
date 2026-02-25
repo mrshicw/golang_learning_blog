@@ -5,4 +5,4 @@ server:
 
 jwt:
   secret: "my-secret-key"
-  expire: "24h"
+  expire: 24   # 24(hour)

@@ -72,8 +72,10 @@ type ServerConfig struct {
 
 type JWTConfig struct {
 	Secret string `mapstructure:"secret"`
-	Expire string `mapstructure:"expire"`
+	Expire uint   `mapstructure:"expire"`
 }
+
+var CONFIG *Config
 
 func init() {
 	// 设置配置文件名称（不含扩展名）
@@ -116,4 +118,9 @@ func LoadConfig() (*Config, error) {
 
 	// 返回解析成功的配置对象
 	return &config, nil
+}
+
+func GetConfig() *Config {
+	CONFIG, _ := LoadConfig()
+	return CONFIG
 }
